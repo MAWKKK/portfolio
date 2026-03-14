@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Видеомонтажёр — Портфолио</title>
+    <meta name="description" content="Профессиональный видеомонтаж для YouTube, рекламы, клипов и соцсетей. Монтаж, который удерживает зрителя.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-card-hover: #1c1c1c;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+            --accent: #c8ff00;
+            --accent-dim: rgba(200, 255, 0, 0.1);
+            --border: #222222;
+            --border-light: #2a2a2a;
+            --radius: 12px;
+            --radius-lg: 20px;
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: #333 #0a0a0a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--accent); color: #000; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        a { text-decoration: none; color: inherit; }
+        img, video { display: block; max-width: 100%; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ====== ФОНОВЫЕ ГРАДИЕНТЫ (оптимизировано: 3 вместо 5) ====== */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            will-change: auto;
+        }
+
+        .bg-glow .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            will-change: auto;
+        }
+
+        .bg-glow .blob-1 {
+            width: 550px; height: 550px;
+            background: radial-gradient(circle, rgba(200, 255, 0, 0.14) 0%, transparent 70%);
+            top: -10%; left: -8%;
+            opacity: 0.3;
+        }
+
+        .bg-glow .blob-2 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(60, 80, 180, 0.16) 0%, transparent 70%);
+            top: 35%; right: -5%;
+            opacity: 0.22;
+        }
+
+        .bg-glow .blob-3 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(100, 60, 180, 0.1) 0%, transparent 70%);
+            bottom: 0%; left: 20%;
+            opacity: 0.18;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ====== НАВИГАЦИЯ ====== */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+            background: transparent;
+        }
+
+        .nav.scrolled {
+            background: rgba(10, 10, 10, 0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0;
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo .dot {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover { color: var(--text-primary); }
+
+        .nav-links a.btn-nav {
+            background: var(--accent);
+            color: #000;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav-links a.btn-nav:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(200, 255, 0, 0.3);
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .burger span {
+            width: 24px; height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .burger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .burger.active span:nth-child(2) { opacity: 0; }
+        .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .mobile-menu.active { display: flex; }
+
+        .mobile-menu a {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .mobile-menu a:hover { color: var(--accent); }
+
+        .mobile-menu a.mobile-contact-btn {
+            background: var(--accent);
+            color: #000;
+            padding: 16px 48px;
+            border-radius: 100px;
+            font-weight: 700;
+            margin-top: 16px;
+        }
+
+        /* ====== HERO ====== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            position: relative;
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(22, 22, 22, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .hero-badge .status-dot {
+            width: 6px; height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 7vw, 78px);
+            font-weight: 900;
+            line-height: 1.08;
+            letter-spacing: -2.5px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .highlight { color: var(--accent); }
+
+        .hero-sub {
+            font-size: clamp(15px, 2vw, 19px);
+            color: var(--text-secondary);
+            max-width: 580px;
+            margin: 0 auto 40px;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 36px;
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-primary { background: var(--accent); color: #000; }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(200, 255, 0, 0.3);
+        }
+
+        .btn-contact-hero { background: #2AABEE; color: #fff; border: none; }
+
+        .btn-contact-hero:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(42, 171, 238, 0.4);
+        }
+
+        .btn-contact-hero svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Микро-текст доверия */
+        .hero-trust {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .hero-trust .trust-dot {
+            width: 6px; height: 6px;
+            background: #34D399;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+            flex-shrink: 0;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 64px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat { text-align: center; }
+        .stat-number { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+        .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+
+        /* ====== СЕКЦИИ ====== */
+        .section { padding: 100px 0; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 56px;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .section-tag {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 15px;
+            max-width: 400px;
+        }
+
+        .section-alt {
+            background: rgba(17, 17, 17, 0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        /* ====== РЕЗУЛЬТАТЫ КЛИЕНТОВ (кейсы) ====== */
+        .results-bar {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+            padding: 28px 32px;
+            background: rgba(22, 22, 22, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .result-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 32px;
+            background: var(--border);
+        }
+
+        .result-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .result-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: -0.5px;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .result-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ====== ПОРТФОЛИО ====== */
+        .portfolio-category {
+            margin-bottom: 48px;
+        }
+
+        .portfolio-category:last-child { margin-bottom: 0; }
+
+        .portfolio-category-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 20px;
+            padding-left: 16px;
+            border-left: 3px solid var(--accent);
+            color: var(--text-primary);
+        }
+
+        .portfolio-grid-horizontal {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .portfolio-grid-vertical {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .portfolio-item {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: rgba(22, 22, 22, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .portfolio-item:hover {
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+        }
+
+        /* Превью-изображение с YouTube */
+        .video-wrapper-h {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-wrapper-v {
+            position: relative;
+            width: 100%;
+            padding-top: 150%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-thumb {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .portfolio-item:hover .video-thumb {
+            transform: scale(1.05);
+        }
+
+        .video-wrapper-h video,
+        .video-wrapper-h iframe,
+        .video-wrapper-v video,
+        .video-wrapper-v iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .video-wrapper-h .video-placeholder,
+        .video-wrapper-v .video-placeholder {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: var(--text-muted);
+            font-size: 13px;
+            gap: 10px;
+        }
+
+        /* Оверлей поверх превью */
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.25);
+            transition: var(--transition);
+            gap: 10px;
+        }
+
+        .portfolio-item:hover .video-overlay {
+            background: rgba(0,0,0,0.45);
+        }
+
+        .play-icon {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .portfolio-grid-vertical .play-icon {
+            width: 44px; height: 44px;
+        }
+
+        .portfolio-item:hover .play-icon {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .play-icon svg {
+            width: 20px; height: 20px;
+            fill: white;
+            margin-left: 3px;
+        }
+
+        .portfolio-grid-vertical .play-icon svg {
+            width: 16px; height: 16px;
+            margin-left: 2px;
+        }
+
+        .portfolio-item:hover .play-icon svg { fill: #000; }
+
+        .portfolio-info { padding: 16px 18px; }
+
+        .portfolio-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+
+        .portfolio-grid-vertical .portfolio-info h3 { font-size: 13px; }
+
+        .portfolio-info p { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        .portfolio-grid-vertical .portfolio-info p { font-size: 11px; }
+
+        .portfolio-tags { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+
+        .portfolio-tags span {
+            font-size: 10px;
+            padding: 3px 10px;
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .portfolio-grid-vertical .portfolio-tags span {
+            font-size: 9px;
+            padding: 2px 8px;
+        }
+
+        /* CTA после портфолио */
+        .portfolio-cta {
+            text-align: center;
+            margin-top: 48px;
+        }
+
+        .portfolio-cta p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .portfolio-cta .btn {
+            padding: 18px 44px;
+            font-size: 16px;
+        }
+
+        /* ====== КАК ПРОХОДИТ РАБОТА ====== */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            position: relative;
+        }
+
+        /* Линия-соединитель */
+        .process-grid::before {
+            content: '';
+            position: absolute;
+            top: 48px;
+            left: 12.5%;
+            width: 75%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--border-light), var(--border-light), var(--accent));
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .process-card {
+            padding: 32px 24px;
+            background: rgba(22, 22, 22, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .process-card:hover {
+            border-color: var(--accent);
+            background: rgba(28, 28, 28, 0.7);
+            transform: translateY(-4px);
+        }
+
+        .process-step {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 0 auto 20px;
+            transition: var(--transition);
+        }
+
+        .process-card:hover .process-step {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .process-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .process-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .process-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .process-time {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 11px;
+            padding: 4px 12px;
+            background: var(--accent-dim);
+            border-radius: 100px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ====== УСЛУГИ ====== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .service-card {
+            padding: 36px 28px;
+            background: rgba(22, 22, 22, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            border-color: var(--border-light);
+            background: rgba(28, 28, 28, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .service-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .service-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+        .service-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+        /* ====== О СЕБЕ ====== */
+        .about-section { padding: 100px 0; }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .about-image { position: relative; }
+
+        .about-image-placeholder {
+            width: 100%;
+            aspect-ratio: 4/5;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            overflow: hidden;
+        }
+
+        .about-image-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+
+        .about-floating-card {
+            position: absolute;
+            bottom: -20px; right: -20px;
+            background: rgba(22, 22, 22, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+        }
+
+        .about-floating-card .number { font-size: 28px; font-weight: 800; color: var(--accent); }
+        .about-floating-card .label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        .about-text h2 {
+            font-size: clamp(28px, 4vw, 38px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .about-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .about-skills span {
+            padding: 10px 20px;
+            background: rgba(22, 22, 22, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .about-skills span:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ====== ОТЗЫВЫ ====== */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .testimonial-card {
+            padding: 32px;
+            background: rgba(22, 22, 22, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover { border-color: var(--border-light); }
+
+        .testimonial-stars { color: var(--accent); font-size: 14px; margin-bottom: 16px; letter-spacing: 2px; }
+
+        .testimonial-card blockquote {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-style: normal;
+        }
+
+        .testimonial-author { display: flex; align-items: center; gap: 12px; }
+
+        .testimonial-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-dim), rgba(10,10,10,0.5));
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .testimonial-name { font-size: 14px; font-weight: 600; }
+        .testimonial-role { font-size: 12px; color: var(--text-muted); }
+
+        /* ====== КОНТАКТЫ ====== */
+        .contact-section { padding: 100px 0 80px; }
+
+        .contact-wrapper {
+            background: rgba(22, 22, 22, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 80px 56px;
+            text-align: center;
+        }
+
+        .contact-wrapper .section-tag { margin-bottom: 16px; }
+
+        .contact-wrapper h2 {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .contact-wrapper > p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.7;
+            max-width: 500px;
+            margin: 0 auto 48px;
+        }
+
+        .contact-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 48px;
+            border-radius: 100px;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .contact-btn-tg { background: #2AABEE; color: #fff; }
+        .contact-btn-tg:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(42, 171, 238, 0.4); }
+
+        .contact-btn-email { background: var(--text-primary); color: #000; }
+        .contact-btn-email:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255, 255, 255, 0.15); }
+
+        .contact-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+        /* Доверие под кнопками */
+        .contact-trust {
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .contact-trust .trust-dot {
+            width: 6px; height: 6px;
+            background: #34D399;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ====== ПЛАВАЮЩАЯ КНОПКА TELEGRAM ====== */
+        .floating-tg {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 900;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: #2AABEE;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(42, 171, 238, 0.4);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .floating-tg:hover {
+            transform: scale(1.12) translateY(-3px);
+            box-shadow: 0 8px 32px rgba(42, 171, 238, 0.55);
+        }
+
+        .floating-tg svg {
+            width: 28px; height: 28px;
+            fill: white;
+        }
+
+        /* Пульсация вокруг кнопки */
+        .floating-tg::before {
+            content: '';
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: #2AABEE;
+            animation: float-pulse 2.5s infinite;
+            z-index: -1;
+        }
+
+        @keyframes float-pulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        /* Тултип */
+        .floating-tg-tooltip {
+            position: absolute;
+            right: 72px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .floating-tg:hover .floating-tg-tooltip {
+            opacity: 1;
+        }
+
+        /* ====== FOOTER ====== */
+        .footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-copy { font-size: 13px; color: var(--text-muted); }
+
+        .footer-socials { display: flex; gap: 12px; }
+
+        .footer-socials a {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: rgba(22, 22, 22, 0.6);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .footer-socials a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* ====== МОДАЛКА ====== */
+        .video-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .video-modal.active { display: flex; }
+
+        .video-modal-content {
+            width: 100%;
+            max-width: 960px;
+            position: relative;
+        }
+
+        .video-modal-close {
+            position: absolute;
+            top: -48px; right: 0;
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .video-modal-close:hover { background: rgba(255,255,255,0.2); }
+
+        .video-modal-player {
+            width: 100%;
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-modal-player.modal-horizontal { aspect-ratio: 16/9; }
+
+        .video-modal-player.modal-vertical {
+            aspect-ratio: 9/16;
+            max-height: 85vh;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .video-modal-player video,
+        .video-modal-player iframe {
+            width: 100%; height: 100%;
+            border: none;
+        }
+
+        /* ====== АДАПТИВ ====== */
+        @media (max-width: 1024px) {
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+            .portfolio-grid-vertical { grid-template-columns: repeat(3, 1fr); }
+            .process-grid { grid-template-columns: repeat(2, 1fr); }
+            .process-grid::before { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .burger { display: flex; }
+            .hero { padding: 100px 24px 60px; }
+            .hero-stats { flex-direction: column; gap: 24px; }
+            .portfolio-grid-horizontal { grid-template-columns: 1fr; }
+            .portfolio-grid-vertical { grid-template-columns: repeat(2, 1fr); }
+            .services-grid { grid-template-columns: 1fr; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            .contact-wrapper { padding: 48px 24px; }
+            .section { padding: 60px 0; }
+            .section-header { flex-direction: column; align-items: flex-start; }
+            .bg-glow .blob { opacity: 0.12; }
+            .floating-tg { width: 52px; height: 52px; bottom: 20px; right: 20px; }
+            .floating-tg svg { width: 24px; height: 24px; }
+            .floating-tg-tooltip { display: none; }
+
+            .results-bar {
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+            .result-item::after { display: none !important; }
+            .result-item { padding: 0; }
+
+            .process-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { letter-spacing: -1.5px; }
+            .contact-buttons { flex-direction: column; align-items: center; }
+            .contact-btn { width: 100%; justify-content: center; }
+            .portfolio-grid-vertical { grid-template-columns: repeat(2, 1fr); }
+            .video-modal-player.modal-vertical { max-width: 90%; }
+            .process-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ====== АНИМАЦИИ (оптимизированные) ====== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Отключаем анимации если пользователь просит */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+            .fade-in { opacity: 1; transform: none; }
+            .floating-tg::before { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ФОНОВЫЕ ГРАДИЕНТЫ (3 блоба) -->
+    <div class="bg-glow" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="page-content">
+
+        <!-- НАВИГАЦИЯ -->
+        <nav class="nav" id="nav">
+            <div class="container nav-inner">
+                <a href="#" class="nav-logo"><span class="dot"></span>wlkey</a>
+                <ul class="nav-links">
+                    <li><a href="#portfolio">Портфолио</a></li>
+                    <li><a href="#services">Услуги</a></li>
+                    <li><a href="#about">Обо мне</a></li>
+                    <li><a href="#reviews">Отзывы</a></li>
+                    <li><a href="https://t.me/realwlkey" target="_blank" class="btn-nav">Contact</a></li>
+                </ul>
+                <button class="burger" id="burger" aria-label="Меню">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Мобильное меню -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#portfolio" onclick="closeMenu()">Портфолио</a>
+            <a href="#services" onclick="closeMenu()">Услуги</a>
+            <a href="#about" onclick="closeMenu()">Обо мне</a>
+            <a href="#reviews" onclick="closeMenu()">Отзывы</a>
+            <a href="https://t.me/realwlkey" target="_blank" class="mobile-contact-btn" onclick="closeMenu()">Contact</a>
+        </div>
+
+        <!-- ===== HERO ===== -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="status-dot"></span>
+                    Открыт к заказам
+                </div>
+
+                <!-- Улучшенный продающий заголовок -->
+                <h1>
+                    Монтаж, который<br>
+                    <span class="highlight">удерживает</span> зрителя<br>
+                    до конца
+                </h1>
+
+                <p class="hero-sub">
+                    Превращаю сырой материал в видео, которое досматривают до конца.
+                    Reels, реклама, YouTube — любой формат и стиль.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#portfolio" class="btn btn-primary">
+                        Смотреть работы
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                    </a>
+                    <a href="https://t.me/realwlkey" target="_blank" class="btn btn-contact-hero">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        Contact
+                    </a>
+                </div>
+
+                <!-- Микро-текст доверия -->
+                <div class="hero-trust">
+                    <span class="trust-dot"></span>
+                    Отвечаю в течение 10–20 минут
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat"><div class="stat-number">50+</div><div class="stat-label">Проектов</div></div>
+                    <div class="stat"><div class="stat-number">1,5+</div><div class="stat-label">Года опыта</div></div>
+                    <div class="stat"><div class="stat-number">15+</div><div class="stat-label">Клиентов</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ПОРТФОЛИО ===== -->
+        <section class="section" id="portfolio">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div>
+                        <div class="section-tag">Портфолио</div>
+                        <h2 class="section-title">Избранные работы</h2>
+                    </div>
+                    <p class="section-desc">Каждый проект — уникальная история. Вот некоторые из моих лучших работ.</p>
+                </div>
+
+                <!-- Результаты клиентов -->
+                <div class="results-bar fade-in">
+                    <div class="result-item">
+                        <div class="result-icon">🚀</div>
+                        <div class="result-text">
+                            <div class="result-value">+1.2M</div>
+                            <div class="result-label">просмотров Reels</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">📈</div>
+                        <div class="result-text">
+                            <div class="result-value">+40%</div>
+                            <div class="result-label">рост CTR рекламы</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">🎯</div>
+                        <div class="result-text">
+                            <div class="result-value">80%</div>
+                            <div class="result-label">удержание на YouTube</div>
+                        </div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-icon">⚡</div>
+                        <div class="result-text">
+                            <div class="result-value">12ч</div>
+                            <div class="result-label">среднее время сдачи</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Youtube формат -->
+              
+                <div class="portfolio-category fade-in">
+                    <h3 class="portfolio-category-title">Вертикальные видео</h3>
+                    <div class="portfolio-grid-vertical">
+
+                        <div class="portfolio-item" onclick="openModal('v1', 'vertical')">
+                            <div class="video-wrapper-v">
+                                <img class="video-thumb" src="srcin/nebo.png" alt="Reels превью" loading="lazy">
+                                <div class="video-overlay">
+                                    <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="portfolio-info">
+                                <h3>Reels — Бренд</h3>
+                                <p>Короткий контент</p>
+                                <div class="portfolio-tags"><span>Reels</span><span>Expert</span></div>
+                            </div>
+                        </div>
+
+                        <div class="portfolio-item" onclick="openModal('v2', 'vertical')">
+                            <div class="video-wrapper-v">
+                                <img class="video-thumb" src="srcin/car.png" alt="Shorts превью" loading="lazy">
+                                <div class="video-overlay">
+                                    <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="portfolio-info">
+                                <h3>YouTube Shorts</h3>
+                                <p>Вертикальный контент</p>
+                                <div class="portfolio-tags"><span>Shorts</span><span>Premiere</span></div>
+                            </div>
+                        </div>
+
+                        <div class="portfolio-item" onclick="openModal('v3', 'vertical')">
+                            <div class="video-wrapper-v">
+                                <img class="video-thumb" src="srcin/sklad.png" alt="TikTok превью" loading="lazy">
+                                <div class="video-overlay">
+                                    <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="portfolio-info">
+                                <h3>TikTok — Продукт</h3>
+                                <p>Продвижение товара</p>
+                                <div class="portfolio-tags"><span>TikTok</span><span>Motion</span></div>
+                            </div>
+                        </div>
+
+                        <div class="portfolio-item" onclick="openModal('v4', 'vertical')">
+                            <div class="video-wrapper-v">
+                                <img class="video-thumb" src="srcin/dubai.png" alt="Stories превью" loading="lazy">
+                                <div class="video-overlay">
+                                    <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="portfolio-info">
+                                <h3>Stories — Бренд</h3>
+                                <p>Анимированные сторис</p>
+                                <div class="portfolio-tags"><span>Reels</span><span>AE</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                  <div class="portfolio-category fade-in">
+                    <h3 class="portfolio-category-title">Youtube формат</h3>
+                    <div class="portfolio-grid-horizontal">
+
+                        <div class="portfolio-item" onclick="openModal('yt1', 'horizontal')">
+                            <div class="video-wrapper-h">
+                                <img class="video-thumb" src="srcin/motion166.png" alt="YouTube видео превью" loading="lazy">
+                                <div class="video-overlay">
+                                    <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="portfolio-info">
+                                <h3>YouTube-видео — Блогер</h3>
+                                <p>Динамичный монтаж для YouTube-канала</p>
+                                <div class="portfolio-tags"><span>Motion Graphics</span><span>After Effects</span><span>Color Grading</span></div>
+                            </div>
+                        </div>
+
+                        <div class="portfolio-item" onclick="openModal('yt2', 'horizontal')">
+                            <div class="video-wrapper-h">
+                                <img class="video-thumb" src="srcin/motion.png" alt="Рекламный ролик превью" loading="lazy">
+                                <div class="video-overlay">
+                                    <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                                </div>
+                            </div>
+                            <div class="portfolio-info">
+                                <h3>Рекламный ролик — Бренд</h3>
+                                <p>Рекламный видеоролик для продвижения продукта</p>
+                                <div class="portfolio-tags"><span>Реклама</span><span>After Effects</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Вертикальные видео -->
+
+                <!-- CTA после портфолио -->
+                <div class="portfolio-cta fade-in">
+                    <p>Нравится то, что видите? Давайте сделаем так же для вас</p>
+                    <a href="https://t.me/realwlkey" target="_blank" class="btn btn-primary">
+                        Обсудить проект
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===== КАК ПРОХОДИТ РАБОТА ===== -->
+        <section class="section section-alt" id="process">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div>
+                        <div class="section-tag">Процесс</div>
+                        <h2 class="section-title">Как проходит работа</h2>
+                    </div>
+                    <p class="section-desc">От идеи до готового видео — простой и прозрачный процесс без сюрпризов.</p>
+                </div>
+                <div class="process-grid">
+                    <div class="process-card fade-in">
+                        <div class="process-step">1</div>
+                        <div class="process-icon">💬</div>
+                        <h3>Бриф и обсуждение</h3>
+                        <p>Обсуждаем задачу, стиль, референсы и дедлайны. Вы рассказываете — я слушаю.</p>
+                        <span class="process-time">10–15 мин</span>
+                    </div>
+                    <div class="process-card fade-in">
+                        <div class="process-step">2</div>
+                        <div class="process-icon">🎬</div>
+                        <h3>Черновой монтаж</h3>
+                        <p>Собираю структуру видео, выстраиваю ритм, добавляю музыку и базовые эффекты.</p>
+                        <span class="process-time">1-5 часов</span>
+                    </div>
+                    <div class="process-card fade-in">
+                        <div class="process-step">3</div>
+                        <div class="process-icon">✏️</div>
+                        <h3>Правки</h3>
+                        <p>Вносим корректировки до полного соответствия вашему видению. 2 раунда правок включены.</p>
+                        <span class="process-time">1-2 часа</span>
+                    </div>
+                    <div class="process-card fade-in">
+                        <div class="process-step">4</div>
+                        <div class="process-icon">🚀</div>
+                        <h3>Финальный рендер</h3>
+                        <p>Готовое видео в нужном формате и качестве. Загружайте и публикуйте!</p>
+                        <span class="process-time">Готово!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== УСЛУГИ ===== -->
+        <section class="section" id="services">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div>
+                        <div class="section-tag">Услуги</div>
+                        <h2 class="section-title">Что я делаю</h2>
+                    </div>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card fade-in">
+                        <div class="service-icon">🎬</div>
+                        <h3>Монтаж видео</h3>
+                        <p>Профессиональный монтаж для YouTube, рекламы, презентаций и любого другого формата.</p>
+                    </div>
+                    <div class="service-card fade-in">
+                        <div class="service-icon">🎨</div>
+                        <h3>Цветокоррекция</h3>
+                        <p>Придаю вашему видео кинематографический стиль с помощью профессиональной цветокоррекции.</p>
+                    </div>
+                    <div class="service-card fade-in">
+                        <div class="service-icon">✨</div>
+                        <h3>Motion Design</h3>
+                        <p>Анимированная графика, титры, интро, аутро и визуальные эффекты для вашего контента.</p>
+                    </div>
+                    <div class="service-card fade-in">
+                        <div class="service-icon">🔊</div>
+                        <h3>Звуковой дизайн</h3>
+                        <p>Подбор музыки, звуковых эффектов, сведение аудио для полного погружения зрителя.</p>
+                    </div>
+                    <div class="service-card fade-in">
+                        <div class="service-icon">📱</div>
+                        <h3>Контент для соцсетей</h3>
+                        <p>Reels, Shorts, TikTok — динамичный вертикальный контент, который набирает просмотры.</p>
+                    </div>
+                    <div class="service-card fade-in">
+                        <div class="service-icon">📦</div>
+                        <h3>Полный продакшн</h3>
+                        <p>Полный цикл от идеи до финального видео: сценарий, монтаж, публикация.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== О СЕБЕ ===== -->
+        <section class="about-section section-alt" id="about">
+            <div class="container">
+                <div class="about-grid">
+                    
+                    <div class="about-text fade-in">
+                        <div class="section-tag">Обо мне</div>
+                        <h2>Привет, я — <span style="color: var(--accent)">Артем</span></h2>
+                        <p>Я видеомонтажёр с опытом более 1,5 года. Работаю с YouTube-блогерами, брендами и продакшн-студиями. Мой подход — не просто склеить кадры, а создать историю, которая удержит зрителя до конца.</p>
+                        <p>Работаю в Adobe Premiere Pro, After Effects, Capcut.</p>
+                        <div class="about-skills">
+                            <span>Premiere Pro</span>
+                            <span>After Effects</span>
+                            <span>Photoshop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== КОНТАКТЫ ===== -->
+        <section class="contact-section section-alt" id="contact">
+            <div class="container">
+                <div class="contact-wrapper fade-in">
+                    <div class="section-tag">Контакты</div>
+                    <h2>Давайте создадим<br>что-то <span style="color:var(--accent)">крутое</span></h2>
+                    <p>Есть проект или идея? Напишите мне — отвечу быстро.</p>
+                    <div class="contact-buttons">
+                        <a href="https://t.me/realwlkey" target="_blank" class="contact-btn contact-btn-tg">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                            Telegram
+                        </a>
+                        <a href="mailto:saveliyb7@gmail.com" class="contact-btn contact-btn-email">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            Email
+                        </a>
+                    </div>
+                    <div class="contact-trust">
+                        <span class="trust-dot"></span>
+                        Отвечаю в течение 10–20 минут
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+
+    </div>
+
+    <!-- ПЛАВАЮЩАЯ КНОПКА TELEGRAM -->
+    <a href="https://t.me/realwlkey" target="_blank" class="floating-tg" aria-label="Написать в Telegram">
+        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        <span class="floating-tg-tooltip">Написать в Telegram</span>
+    </a>
+
+    <!-- МОДАЛКА -->
+    <div class="video-modal" id="videoModal" onclick="closeModal(event)">
+        <div class="video-modal-content" onclick="event.stopPropagation()">
+            <button class="video-modal-close" onclick="closeModalBtn()">✕</button>
+            <div class="video-modal-player" id="modalPlayer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Навигация
+        const nav = document.getElementById('nav');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        // Бургер
+        const burger = document.getElementById('burger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        burger.addEventListener('click', () => {
+            burger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        function closeMenu() {
+            burger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Оптимизированный IntersectionObserver (один на все элементы)
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    fadeObserver.unobserve(entry.target); // перестаём следить после появления
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        /* ===== ВИДЕО =====
+           Замени src на свои YouTube ID.
+           Превью подтянется автоматически через img тег в HTML.
+
+           Формат ссылки для превью:
+           https://img.youtube.com/vi/YOUTUBE_ID/maxresdefault.jpg
+        */
+        const videos = {
+            yt1: { type: 'file', src: 'videos/motion166.mov' },
+            yt2: { type: 'file', src: 'videos/motionn.mov' },
+            v1:  { type: 'file', src: 'videos/nebo.mp4' },
+            v2:  { type: 'file', src: 'videos/car.mp4' },
+            v3:  { type: 'file', src: 'videos/sklad.mp4' },
+            v4:  { type: 'file', src: 'videos/dubai.mov'},
+        };
+
+        function openModal(id, orientation) {
+            const v = videos[id];
+            if (!v) return;
+            const p = document.getElementById('modalPlayer');
+
+            p.className = 'video-modal-player';
+            p.classList.add(orientation === 'vertical' ? 'modal-vertical' : 'modal-horizontal');
+
+            if (v.type === 'youtube') {
+                p.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.src}?autoplay=1&rel=0" allowfullscreen allow="autoplay" loading="lazy"></iframe>`;
+            } else if (v.type === 'file') {
+                p.innerHTML = `<video src="${v.src}" controls autoplay></video>`;
+            }
+
+            document.getElementById('videoModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(e) { if (e.target === e.currentTarget) closeModalBtn(); }
+        function closeModalBtn() {
+            document.getElementById('videoModal').classList.remove('active');
+            document.getElementById('modalPlayer').innerHTML = '';
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+    </script>
+
+</body>
+</html>
